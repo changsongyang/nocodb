@@ -156,12 +156,11 @@ const getContainerScrollForElement = (
     relativePos.bottom + (offset?.bottom || 0) > 0
       ? container.scrollTop + relativePos.bottom + (offset?.bottom || 0)
       : relativePos.top - (offset?.top || 0) < 0
-      ? container.scrollTop + relativePos.top - (offset?.top || 0)
-      : container.scrollTop
+        ? container.scrollTop + relativePos.top - (offset?.top || 0)
+        : container.scrollTop
 
   return scroll
 }
-
 
 const { selectCell, selectBlock, selectedRange, clearRangeRows, startSelectRange, selected } = useMultiSelect(
   fields,
@@ -183,11 +182,16 @@ const { selectCell, selectBlock, selectedRange, clearRangeRows, startSelectRange
     }
 
     const cmdOrCtrl = isMac() ? e.metaKey : e.ctrlKey
-    if (e.code === 'Space') {
+    if (e.key === ' ') {
       if (selected.row !== null && !editEnabled) {
         e.preventDefault()
         const row = data.value[selected.row]
         expandForm(row)
+        return true
+      }
+    } else if (e.key === 'Escape') {
+      if (editEnabled) {
+        editEnabled = false
         return true
       }
     }
@@ -444,8 +448,8 @@ const saveOrUpdateRecords = async (args: { metaValue?: TableType; viewMetaValue?
       currentRow.rowMeta.changed = false
       for (const field of (args.metaValue || meta.value)?.columns ?? []) {
         if (isVirtualCol(field)) continue
-        if (field.title! in currentRow.row && currentRow.row[field.title!] !== currentRow.oldRow[field.title!]) {
-          await updateOrSaveRow(currentRow, field.title!, {}, args)
+        if (currentRow.row[field.title!] !== currentRow.oldRow[field.title!]) {
+          await updateOrSaveRow(currentRow, field.title!, args)
         }
       }
     }
@@ -521,8 +525,8 @@ watch(
 </script>
 
 <template>
-  <div class="relative flex flex-col h-full min-h-0 w-full" data-nc="nc-grid-wrapper">
-    <general-overlay :model-value="isLoading" inline transition class="!bg-opacity-15" data-nc="grid-load-spinner">
+  <div class="relative flex flex-col h-full min-h-0 w-full">
+    <general-overlay :model-value="isLoading" inline transition class="!bg-opacity-15">
       <div class="flex items-center justify-center h-full w-full !bg-white !bg-opacity-85 z-1000">
         <a-spin size="large" />
       </div>
