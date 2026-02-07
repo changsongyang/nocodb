@@ -207,6 +207,9 @@ const permissionScopes = {
     'mcpCreate',
     'mcpUpdate',
     'mcpDelete',
+
+    // etc
+    'fetchViaUrl',
   ],
 };
 
@@ -335,6 +338,9 @@ const rolePermissions:
 
       // Extensions
       extensionUpdate: true,
+
+      // etc
+      fetchViaUrl: true,
     },
   },
   [ProjectRoles.CREATOR]: {
